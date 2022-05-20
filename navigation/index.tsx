@@ -64,6 +64,7 @@ function RootNavigator() {
         component={BookScreen}
         options={{
           headerShown: false,
+          animation: "slide_from_right",
         }}
       />
       <Stack.Group screenOptions={{ presentation: "modal" }}>

@@ -38,7 +38,7 @@ const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       Modal: "modal",
-      Book: "book",
+      Book: "book/:id",
       NotFound: "*",
     },
   },

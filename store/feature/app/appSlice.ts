@@ -2,25 +2,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../..";
 
 interface AppState {
-  hidden: boolean;
+  visible: boolean;
 }
 
 const initialState: AppState = {
-  hidden: true,
+  visible: false,
 };
 
 export const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
-    setHidden(state, action: PayloadAction<boolean>) {
-      state.hidden = action.payload;
+    setVisible(state, action: PayloadAction<boolean>) {
+      state.visible = action.payload;
     },
   },
 });
 
-export const { setHidden } = appSlice.actions;
+export const { setVisible } = appSlice.actions;
 
-export const selectHidden = (state: RootState) => state.app.hidden;
+export const selectVisible = (state: RootState) => state.app.visible;
 
 export default appSlice.reducer;

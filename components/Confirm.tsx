@@ -1,18 +1,20 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import { transform } from "@babel/core";
+import React, { useEffect, useRef } from "react";
 import {
   Animated,
   BackHandler,
   Dimensions,
+  Modal,
   StyleSheet,
   TouchableNativeFeedback,
 } from "react-native";
 import useDispatch from "../hooks/useDispatch";
 import useSelector from "../hooks/useSelector";
-import { selectHidden, setHidden } from "../store/feature/app/appSlice";
+import { selectVisible, setVisible } from "../store/feature/app/appSlice";
 import { View, Text } from "./Themed";
 
 const Confirm = () => {
-  const hidden = useSelector(selectHidden);
+  const visible = useSelector(selectVisible);
 
   const dispatch = useDispatch();
 
@@ -21,7 +23,7 @@ const Confirm = () => {
   const fadeEnter = () => {
     Animated.timing(fadeAnimate, {
       toValue: 0,
-      duration: 300,
+      duration: 150,
       useNativeDriver: true,
     }).start();
   };
@@ -29,47 +31,49 @@ const Confirm = () => {
   const fadeLeave = () => {
     Animated.timing(fadeAnimate, {
       toValue: 180,
-      duration: 300,
+      duration: 150,
       useNativeDriver: true,
     }).start();
   };
 
   useEffect(() => {
-    hidden ? fadeLeave() : fadeEnter();
-  }, [hidden]);
+    visible ? fadeEnter() : fadeLeave();
+  }, [visible]);
 
-  return useMemo(
-    () => (
-      <Animated.View
-        style={[styles.container, { transform: [{ translateY: fadeAnimate }] }]}
-      >
-        <View style={{ flex: 1 }}>
-          <Text style={{ padding: 8 }}>提示</Text>
-          <View style={styles.text}>
-            <Text style={{ fontSize: 18 }}>确定退出QQ阅读</Text>
+  return (
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          transform: [{ translateY: fadeAnimate }],
+        },
+      ]}
+    >
+      <View style={{ flex: 1 }}>
+        <Text style={{ padding: 8 }}>提示</Text>
+        <View style={styles.text}>
+          <Text style={{ fontSize: 18 }}>确定退出QQ阅读</Text>
+        </View>
+      </View>
+      <View style={{ flexDirection: "row", height: 48, elevation: 4 }}>
+        <TouchableNativeFeedback
+          useForeground={true}
+          onPress={() => BackHandler.exitApp()}
+        >
+          <View style={[styles.button, { backgroundColor: "red" }]}>
+            <Text style={{ color: "white" }}>确认</Text>
           </View>
-        </View>
-        <View style={{ flexDirection: "row", height: 48, elevation: 4 }}>
-          <TouchableNativeFeedback
-            useForeground={true}
-            onPress={() => BackHandler.exitApp()}
-          >
-            <View style={[styles.button, { backgroundColor: "red" }]}>
-              <Text style={{ color: "white" }}>确认</Text>
-            </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback
-            useForeground={true}
-            onPress={() => dispatch(setHidden(true))}
-          >
-            <View style={styles.button}>
-              <Text>取消</Text>
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-      </Animated.View>
-    ),
-    [hidden]
+        </TouchableNativeFeedback>
+        <TouchableNativeFeedback
+          useForeground={true}
+          onPress={() => dispatch(setVisible(false))}
+        >
+          <View style={styles.button}>
+            <Text>取消</Text>
+          </View>
+        </TouchableNativeFeedback>
+      </View>
+    </Animated.View>
   );
 };
 

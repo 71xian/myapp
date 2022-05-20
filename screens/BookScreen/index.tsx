@@ -1,15 +1,12 @@
 import { useFocusEffect } from "@react-navigation/native";
-import axios from "axios";
 import { setStatusBarHidden } from "expo-status-bar";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   BackHandler,
   Dimensions,
-  Modal,
   Pressable,
   StyleSheet,
-  Text,
 } from "react-native";
 import { getText } from "../../api/book";
 import { View } from "../../components/Themed";
@@ -18,7 +15,7 @@ import BottomMenu from "./BottomMenu";
 import FontSelect from "./FontSelect";
 import List from "./List";
 import MoreSetting from "./MoreSetting";
-import NovelText from "./NovelText";
+import NovelText from "./BookText";
 import PopupMenu from "./PopupMenu";
 import TopMenu from "./TopMenu";
 
@@ -34,8 +31,6 @@ export default function NovelScreen({
   const [hiddenList, setHiddenList] = useState(true);
 
   const [hiddenMoreSetting, setHiddenMoreSetting] = useState(true);
-
-  const [show, setShow] = useState(true);
 
   const fadeAnimate = useRef(new Animated.Value(0)).current;
 
@@ -100,8 +95,10 @@ export default function NovelScreen({
       };
       BackHandler.addEventListener("hardwareBackPress", backAction);
 
-      return () =>
+      return () => {
         BackHandler.removeEventListener("hardwareBackPress", backAction);
+        setStatusBarHidden(false, "fade");
+      };
     }, [hiddenMenu, hiddenSetting, hiddenFont, hiddenList])
   );
 
@@ -109,15 +106,6 @@ export default function NovelScreen({
     <Animated.View
       style={[styles.container, { transform: [{ translateX: fadeAnimate }] }]}
     >
-      <Modal
-        transparent={true}
-        visible={show}
-        onRequestClose={() => {
-          setShow(!show);
-        }}
-      >
-        <Text>hello</Text>
-      </Modal>
       <View style={{ width: width, height: height }}>
         {/* 上层菜单 */}
         <TopMenu hidden={hiddenMenu} />
@@ -145,7 +133,6 @@ export default function NovelScreen({
         {/* 阅读内容 */}
         <Pressable
           onPress={(e) => {
-            navigation.push("Modal");
             let centerWitdth = width / 2;
             let centerHeight = height / 2;
             let x = e.nativeEvent.locationX;

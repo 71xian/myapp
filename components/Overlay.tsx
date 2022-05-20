@@ -1,41 +1,38 @@
-import { useState } from "react";
-import { Dimensions, Modal, TouchableWithoutFeedback } from "react-native";
+import { useMemo } from "react";
+import { Dimensions, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import useDispatch from "../hooks/useDispatch";
 import useSelector from "../hooks/useSelector";
-import { selectHidden, setHidden } from "../store/feature/app/appSlice";
+import { selectVisible, setVisible } from "../store/feature/app/appSlice";
 import { View } from "./Themed";
 
 const { width, height } = Dimensions.get("window");
 
 const Overlay = () => {
-  const hidden = useSelector(selectHidden);
-
-  const [visible, setVisible] = useState(false);
+  const visible = useSelector(selectVisible);
 
   const dispatch = useDispatch();
 
-  return (
-    <Modal
-      hardwareAccelerated={true}
-      statusBarTranslucent={true}
-      visible={visible}
-      onRequestClose={() => setVisible(false)}
-      transparent={true}
-    >
-      <TouchableWithoutFeedback onPress={() => dispatch(setHidden(true))}>
+  return useMemo(
+    () => (
+      <TouchableWithoutFeedback onPress={() => dispatch(setVisible(false))}>
         <View
-          style={{
-            height: height,
-            width: width,
-            position: "absolute",
-            backgroundColor: "black",
-            opacity: 0.5,
-            zIndex: 100,
-          }}
+          style={[styles.container, visible ? undefined : { display: "none" }]}
         />
       </TouchableWithoutFeedback>
-    </Modal>
+    ),
+    [visible]
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    height: height,
+    width: width,
+    position: "absolute",
+    backgroundColor: "black",
+    opacity: 0.5,
+    zIndex: 10,
+  },
+});
 
 export default Overlay;
