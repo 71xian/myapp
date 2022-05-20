@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Animated, StyleSheet, Text } from "react-native";
-import Layout from "../../constants/Layout";
-
-const { width, barHeight } = Layout.window;
+import {
+  Animated,
+  Dimensions,
+  StatusBar,
+  StyleSheet,
+  Text,
+} from "react-native";
 
 const TopMenu = ({ hidden }: { hidden: boolean }) => {
   const fadeAnimate = useRef(new Animated.Value(-72)).current;
@@ -10,7 +13,7 @@ const TopMenu = ({ hidden }: { hidden: boolean }) => {
   const fadeEnter = () => {
     Animated.timing(fadeAnimate, {
       toValue: 0,
-      duration: 300,
+      duration: 150,
       useNativeDriver: true,
     }).start();
   };
@@ -18,7 +21,7 @@ const TopMenu = ({ hidden }: { hidden: boolean }) => {
   const fadeLeave = () => {
     Animated.timing(fadeAnimate, {
       toValue: -72,
-      duration: 300,
+      duration: 150,
       useNativeDriver: true,
     }).start();
   };
@@ -44,14 +47,18 @@ const TopMenu = ({ hidden }: { hidden: boolean }) => {
   );
 };
 
+const { width } = Dimensions.get("window");
+
+const { currentHeight } = StatusBar;
+
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
     zIndex: 100,
     backgroundColor: "white",
-    paddingTop: barHeight,
+    paddingTop: currentHeight,
     width: width,
-    height: 72,
+    height: 48,
     top: 0,
   },
 });

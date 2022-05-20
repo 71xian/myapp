@@ -1,7 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
+import Confirm from "./components/Confirm";
+import Overlay from "./components/Overlay";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
@@ -31,6 +32,8 @@ function App() {
   return (
     <SafeAreaProvider>
       <Navigation colorScheme={colorScheme} />
+      <Overlay />
+      <Confirm />
       <StatusBar animated={true} />
     </SafeAreaProvider>
   );

@@ -3,11 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loadAsync } from "expo-font";
 import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import {
-  setFontsize,
-  setSystem,
-  setBrightness,
-} from "../store/feature/app/appSlice";
+import { setFontsize, setSystem, setBrightness } from "../store/feature/book/bookSlice";
+
 import useDispatch from "./useDispatch";
 
 const { getItem } = AsyncStorage;

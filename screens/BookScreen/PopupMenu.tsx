@@ -1,17 +1,12 @@
 import { AntDesign } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
-import {
-  requestPermissionsAsync,
-  setBrightnessAsync,
-  useSystemBrightnessAsync,
-} from "expo-brightness";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   Animated,
   ScrollView,
   StyleSheet,
   Text,
-  ToastAndroid,
+  TouchableNativeFeedback,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -19,17 +14,22 @@ import Layout from "../../constants/Layout";
 import useDispatch from "../../hooks/useDispatch";
 import useSelector from "../../hooks/useSelector";
 import {
-  selectBrightness,
   selectFontSize,
   selectSystem,
+  selectBrightness,
   setBrightness,
-  setFontsize,
   setSystem,
-} from "../../store/feature/app/appSlice";
+  setFontsize,
+} from "../../store/feature/book/bookSlice";
 
 const { width, scale } = Layout.window;
 
-const PopupMenu = ({ hidden }: { hidden: boolean }) => {
+interface Props {
+  hidden: boolean;
+  onChange: () => void;
+}
+
+const PopupMenu = ({ hidden, onChange }: Props) => {
   const dispatch = useDispatch();
   const fontSize = useSelector(selectFontSize);
   const system = useSelector(selectSystem);
@@ -40,7 +40,7 @@ const PopupMenu = ({ hidden }: { hidden: boolean }) => {
   const fadeEnter = () => {
     Animated.timing(fadeAnimate, {
       toValue: 0,
-      duration: 300,
+      duration: 150,
       useNativeDriver: true,
     }).start();
   };
@@ -48,7 +48,7 @@ const PopupMenu = ({ hidden }: { hidden: boolean }) => {
   const fadeLeave = () => {
     Animated.timing(fadeAnimate, {
       toValue: 240,
-      duration: 300,
+      duration: 150,
       useNativeDriver: true,
     }).start();
   };
@@ -56,20 +56,6 @@ const PopupMenu = ({ hidden }: { hidden: boolean }) => {
   useEffect(() => {
     hidden ? fadeLeave() : fadeEnter();
   }, [hidden]);
-
-  useEffect(() => {
-    system ? useSystemBrightnessAsync() : setBrightnessAsync(brightness);
-  }, [system]);
-
-  useEffect(() => {
-    if (!system) {
-      requestPermissionsAsync().then(({ status }) => {
-        if (status === "granted") {
-          setBrightnessAsync(brightness);
-        }
-      });
-    }
-  }, [brightness]);
 
   return useMemo(
     () => (
@@ -90,53 +76,48 @@ const PopupMenu = ({ hidden }: { hidden: boolean }) => {
             value={brightness}
             onValueChange={(value) => dispatch(setBrightness(value))}
           />
-          <Text
-            style={[styles.boxtext, system ? styles.active : styles.inactive]}
-            onPress={() => {
-              dispatch(setSystem(!system));
-            }}
-          >
-            跟随系统
-          </Text>
+          <TouchableOpacity onPress={() => dispatch(setSystem(!system))}>
+            <Text
+              style={[styles.boxtext, system ? styles.active : styles.inactive]}
+            >
+              跟随系统
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.item}>
           <Text style={styles.itemtext}>字号</Text>
-          <Text
-            style={styles.fontSizeStyle}
+          <TouchableOpacity
             onPress={() => {
               if (fontSize <= 12) {
-                ToastAndroid.show("不能再减小了", ToastAndroid.SHORT);
                 return;
               }
               dispatch(setFontsize(fontSize - 2));
             }}
           >
-            A-
-          </Text>
+            <Text style={styles.fontSizeStyle}>A-</Text>
+          </TouchableOpacity>
           <Text>{fontSize * scale}</Text>
-          <Text
+          <TouchableOpacity
             onPress={() => {
               if (fontSize >= 20) {
-                ToastAndroid.show("不能再增大了", ToastAndroid.SHORT);
                 return;
               }
               dispatch(setFontsize(fontSize + 2));
             }}
-            style={styles.fontSizeStyle}
           >
-            A+
-          </Text>
-          <Text
-            style={[styles.boxtext, system ? styles.active : styles.inactive]}
-          >
-            系统字体
-          </Text>
+            <Text style={styles.fontSizeStyle}>A+</Text>
+          </TouchableOpacity>
+          <TouchableNativeFeedback useForeground={true} onPress={onChange}>
+            <Text style={styles.boxtext}>系统字体 {">"}</Text>
+          </TouchableNativeFeedback>
         </View>
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           style={{ paddingVertical: 16 }}
-        ></ScrollView>
+        >
+          <Text>主题</Text>
+        </ScrollView>
         <View style={styles.menu}>
           <TouchableOpacity style={styles.menuitem}>
             <AntDesign name="bars" size={24} color="grey" />
@@ -193,6 +174,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     padding: 8,
     borderRadius: 16,
+    color: "white",
+    backgroundColor: "black",
   },
   fontSizeStyle: {
     paddingVertical: 8,

@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { ImageBackground, StyleSheet, Text } from "react-native";
 import Layout from "../../constants/Layout";
 import useSelector from "../../hooks/useSelector";
-import { selectFontSize } from "../../store/feature/app/appSlice";
+import { selectFontSize } from "../../store/feature/book/bookSlice";
 import BottomText from "./BottomText";
 
 const { width, height } = Layout.window;
@@ -35,7 +35,7 @@ const NovelText = ({ textList, source }: TextProps) => {
               ]}
               key={index}
             >
-              &emsp;&emsp; {text}
+              &emsp;&emsp;{text}
             </Text>
           );
         })}

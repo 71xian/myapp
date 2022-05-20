@@ -25,9 +25,9 @@ const linking: LinkingOptions<RootStackParamList> = {
               TabTwoScreen: "two",
             },
           },
-          BookCase: {
+          BookShelf: {
             screens: {
-              BookCaseScreen: "bookcase",
+              BookShelfScreen: "bookshelf",
             },
           },
           User: {
@@ -38,7 +38,7 @@ const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       Modal: "modal",
-      Novel: "novel",
+      Book: "book",
       NotFound: "*",
     },
   },

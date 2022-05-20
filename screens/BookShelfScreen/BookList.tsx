@@ -73,7 +73,7 @@ export default function BookList() {
       renderItem={({ item }) => {
         return (
           <TouchableOpacity
-            onPress={() => navigation.navigate("Novel")}
+            onPress={() => navigation.navigate("Book")}
             key={item.id}
           >
             <View style={styles.container}>

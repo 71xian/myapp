@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ToastAndroid,
   TouchableOpacity,
-  useWindowDimensions,
 } from "react-native";
 import { Text, View } from "../../components/Themed";
 

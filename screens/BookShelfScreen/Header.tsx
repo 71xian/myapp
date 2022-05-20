@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
   container: {
     height: 180,
     marginBottom: 24,
+    marginTop: 64,
   },
   image: {
     flex: 1,

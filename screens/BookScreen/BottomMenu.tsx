@@ -6,28 +6,27 @@ import {
   StyleSheet,
   Text,
   TouchableNativeFeedback,
-  TouchableOpacity,
 } from "react-native";
 import { View } from "../../components/Themed";
 import Layout from "../../constants/Layout";
 
 const { width } = Layout.window;
 
-const BottomMenu = ({
-  hidden,
-  onChange,
-}: {
+interface Props {
   hidden: boolean;
   onChange: () => void;
-}) => {
-  const fadeAnimate = useRef(new Animated.Value(48)).current;
+  onList: () => void;
+}
 
+const BottomMenu = ({ hidden, onChange, onList }: Props) => {
   const navigation = useNavigation();
+
+  const fadeAnimate = useRef(new Animated.Value(48)).current;
 
   const fadeEnter = () => {
     Animated.timing(fadeAnimate, {
       toValue: 0,
-      duration: 300,
+      duration: 150,
       useNativeDriver: true,
     }).start();
   };
@@ -35,7 +34,7 @@ const BottomMenu = ({
   const fadeLeave = () => {
     Animated.timing(fadeAnimate, {
       toValue: 48,
-      duration: 300,
+      duration: 150,
       useNativeDriver: true,
     }).start();
   };
@@ -52,9 +51,7 @@ const BottomMenu = ({
         <TouchableNativeFeedback
           style={{ flex: 1 }}
           useForeground={true}
-          onPress={() => {
-            navigation.navigate("NotFound");
-          }}
+          onPress={onList}
         >
           <View style={styles.item}>
             <AntDesign name="bars" size={24} color="grey" />

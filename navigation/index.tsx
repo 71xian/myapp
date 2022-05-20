@@ -15,11 +15,10 @@ import { ColorSchemeName } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import BookCaseScreen from "../screens/Bookcase";
+import BookShelfScreen from "../screens/BookShelfScreen";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import Novel from "../screens/Novel";
-import TabTwoScreen from "../screens/TabTwoScreen";
+import BookScreen from "../screens/BookScreen";
 import UserScreen from "../screens/User";
 import { RootStackParamList, RootTabParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -61,8 +60,8 @@ function RootNavigator() {
         }}
       />
       <Stack.Screen
-        name="Novel"
-        component={Novel}
+        name="Book"
+        component={BookScreen}
         options={{
           headerShown: false,
         }}
@@ -85,26 +84,36 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="BookCase"
+      initialRouteName="BookShelf"
+      backBehavior="firstRoute"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
         tabBarInactiveTintColor: "grey",
         headerShown: false,
+        tabBarHideOnKeyboard: true,
+        tabBarShowLabel: false,
       }}
     >
       <BottomTab.Screen
-        name="BookCase"
-        component={BookCaseScreen}
+        name="BookShelf"
+        component={BookShelfScreen}
         options={{
-          title: "书架",
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Message"
+        component={UserScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="message1" color={color} />
+          ),
         }}
       />
       <BottomTab.Screen
         name="User"
         component={UserScreen}
         options={{
-          title: "我的",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
